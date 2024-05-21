@@ -65,7 +65,7 @@ void vigenere_decrypt(char range_low, char range_high, const char *key, const ch
  */
 int cli(int argc, char **argv) {
     if (argc != 4) {
-        fprintf(stderr, "Error: Incorrect number of arguments.\n");
+        fprintf(stderr, "Error: Incorrect number of arguments.\n Usage: %s [caesar-encrypt | caesar-decrypt | vigenere-encrypt | vigenere-decrypt] key message\n", argv[0]);
         return 1;
     }
 
