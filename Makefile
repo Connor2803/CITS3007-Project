@@ -1,7 +1,5 @@
-# Makefile for crypto.c
-
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Werror
 TARGET = crypto
 SOURCE = crypto.c
 
