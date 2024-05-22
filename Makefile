@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Werror
+CFLAGS = -std=c11 -pedantic-errors -Wall -Wextra -Wconversion
 TARGET = crypto
 SOURCE = crypto.c
 

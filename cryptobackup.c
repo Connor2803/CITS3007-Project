@@ -85,35 +85,36 @@ int cli(int argc, char **argv) {
 
     if (strcmp(operation, "caesar-encrypt") == 0 || strcmp(operation, "caesar-decrypt") == 0) {
         char *endptr;
-
-        
-
-        long key = strtol(key_str, &endptr, 10);
-
-        // Check if the conversion was successful
-        if (*endptr != '\0' || endptr == key_str) {
-            fprintf(stderr, "Error: Key must be a valid integer.\n");
-            return 1;
+        size_t i = 0;
+        // Check if it has a negative sign at the start
+        if (key_str[i] == '-') {
+            ++i;
         }
+        // Then check the rest of the characters in the key
+        for (; key_str[i] != '\0'; ++i) {
+            if (key_str[i] < '0' || key_str[i] > '9') {
+                fprintf(stderr, "Error: Key must be a valid integer.\n");
+                return 1;
+            }
+        }
+        int key = (int)strtol(key_str, &endptr, 10);
 
-        // Check if the key is within the range of INT_MIN and INT_MAX
         if (key < INT_MIN || key > INT_MAX) {
             fprintf(stderr, "Error: Key out of range.\n");
             return 1;
         }
 
-        // Normalize the key to the range of -25 to 25 for the Caesar cipher
-        // Just making it into its positive equivalent if negative though
-        int normalized_key = (int)key % 26;
-        if (normalized_key < 0) {
-            normalized_key += 26;
+        // Need to get the key in the range of -26 to 26, so can hard code this for CLI
+        if (key < 0) {
+            key = 26 + (key % 26);
         }
+        key = key % 26;
 
         // Run either encrypt or decrypt
         if (strcmp(operation, "caesar-encrypt") == 0) {
-            caesar_encrypt('A', 'Z', normalized_key, message, result);
+            caesar_encrypt('A', 'Z', key, message, result);
         } else {
-            caesar_decrypt('A', 'Z', normalized_key, message, result);
+            caesar_decrypt('A', 'Z', key, message, result);
         }
     } else if (strcmp(operation, "vigenere-encrypt") == 0 || strcmp(operation, "vigenere-decrypt") == 0) {
 
@@ -137,4 +138,3 @@ int cli(int argc, char **argv) {
     printf("%s\n", result);
     return 0;
 }
-
