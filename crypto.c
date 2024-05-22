@@ -76,7 +76,7 @@ int cli(int argc, char **argv) {
         return 1;
     }
 
-    const char *operation = argv[1];
+    const char *method = argv[1];
     const char *key_str = argv[2];
     const char *message = argv[3];
 
@@ -90,7 +90,7 @@ int cli(int argc, char **argv) {
         return 1;
     }
     // could change these buffers to be the exact size of the string
-    if (strncmp(operation, "caesar-encrypt", BUFFER_SIZE) == 0 || strncmp(operation, "caesar-decrypt", BUFFER_SIZE) == 0) {
+    if (strncmp(method, "caesar-encrypt", BUFFER_SIZE) == 0 || strncmp(method, "caesar-decrypt", BUFFER_SIZE) == 0) {
         char *endptr;
 
         long key = strtol(key_str, &endptr, 10);
@@ -117,12 +117,12 @@ int cli(int argc, char **argv) {
         }
         // these too!
         // Run either encrypt or decrypt
-        if (strncmp(operation, "caesar-encrypt", BUFFER_SIZE) == 0) {
+        if (strncmp(method, "caesar-encrypt", BUFFER_SIZE) == 0) {
             caesar_encrypt('A', 'Z', key, message, result);
         } else {
             caesar_decrypt('A', 'Z', key, message, result);
         }
-    } else if (strncmp(operation, "vigenere-encrypt", BUFFER_SIZE) == 0 || strncmp(operation, "vigenere-decrypt", BUFFER_SIZE) == 0) {
+    } else if (strncmp(method, "vigenere-encrypt", BUFFER_SIZE) == 0 || strncmp(method, "vigenere-decrypt", BUFFER_SIZE) == 0) {
 
         for (size_t i = 0; key_str[i] != '\0'; i++) {
             if (key_str[i] < 'A' || key_str[i] > 'Z') {
@@ -132,13 +132,13 @@ int cli(int argc, char **argv) {
             }
         }
 
-        if (strncmp(operation, "vigenere-encrypt", BUFFER_SIZE) == 0) {
+        if (strncmp(method, "vigenere-encrypt", BUFFER_SIZE) == 0) {
             vigenere_encrypt('A', 'Z', key_str, message, result);
         } else {
             vigenere_decrypt('A', 'Z', key_str, message, result);
         }
     } else {
-        fprintf(stderr, "Error: Invalid operation. Must be ['caesar-encrypt' | 'caesar-decrypt' | 'vigenere-encrypt' | 'vigenere-decrypt'].\n");
+        fprintf(stderr, "Error: Invalid method. Must be ['caesar-encrypt' | 'caesar-decrypt' | 'vigenere-encrypt' | 'vigenere-decrypt'].\n");
         free(result);
         return 1;
     }
