@@ -7,6 +7,7 @@
 #include <limits.h>
 #include "crypto.h"
 
+// Needs to be bigger than the largest possible method which is vigenere-encrypt and decrypt at 16
 #define METHOD_BUFFER 25
 
 // Encrypt given `plain_text` using the Caesar cipher using `key`, only changing characters in 
@@ -81,29 +82,24 @@ void vigenere_decrypt(char range_low, char range_high, const char *key, const ch
 int handle_caesar(const char *method, const char *key_str, const char *message, char *result) {
     char *end;
     long key = strtol(key_str, &end, 10);
-
     if (*end != '\0') {
         fprintf(stderr, "Error: Key must be a valid integer.\n");
         return 1;
     }
-
     if (key < INT_MIN || key > INT_MAX) {
         fprintf(stderr, "Error: Key out of integer range.\n");
         return 1;
     }
-
     key = (int)key % 26;
     if (key < 0) {
         key += 26;
     }
-
     if (strcmp(method, "caesar-encrypt") == 0) {
         caesar_encrypt('A', 'Z', (int)key, message, result);
     } 
     else {
         caesar_decrypt('A', 'Z', (int)key, message, result);
     }
-
     return 0;
 }
 
@@ -115,14 +111,12 @@ int handle_vigenere(const char *method, const char *key_str, const char *message
             return 1;
         }
     }
-
     if (strcmp(method, "vigenere-encrypt") == 0) {
         vigenere_encrypt('A', 'Z', key_str, message, result);
     } 
     else {
         vigenere_decrypt('A', 'Z', key_str, message, result);
     }
-
     return 0;
 }
 
@@ -159,13 +153,11 @@ int handle_vigenere(const char *method, const char *key_str, const char *message
   * 
   * \return Will return 0 on success and 1 on error.
   */
-
 int cli(int argc, char **argv) {
     if (argc != 4) {
         fprintf(stderr, "Usage: %s [method] [key] [message]\n", argv[0]);
         return 1;
     }
-
     const char *method = argv[1];
     const char *key_str = argv[2];
     const char *message = argv[3];
@@ -177,7 +169,6 @@ int cli(int argc, char **argv) {
         free(result);
         return 1;
     }
-
     int output = 0;
     if (strncmp(method, "caesar-encrypt", METHOD_BUFFER) == 0 || 
     strncmp(method, "caesar-decrypt", METHOD_BUFFER) == 0) {
@@ -192,11 +183,13 @@ int cli(int argc, char **argv) {
             " 'caesar-decrypt' | 'vigenere-encrypt' | 'vigenere-decrypt'].\n");
         output = 1;
     }
-
     if (output == 0) {
         printf("%s\n", result);
     }
-
     free(result);
     return output;
+}
+
+int main(int argc, char **argv) {
+    return cli(argc, argv);
 }
